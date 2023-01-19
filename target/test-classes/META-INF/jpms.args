@@ -1,0 +1,4 @@
+--patch-module
+com.tugalsan.api.ftp=_
+--add-reads
+com.tugalsan.api.ftp=ALL-UNNAMED
