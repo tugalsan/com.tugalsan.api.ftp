@@ -74,7 +74,7 @@ public class TS_FtpUtils {
         });
     }
 
-    public static Boolean login(FTPClient ftpClient, CharSequence user, CharSequence pass) {
+    public static boolean login(FTPClient ftpClient, CharSequence user, CharSequence pass) {
         return TGS_UnSafe.compile(() -> {
             var success = ftpClient.login(user.toString(), pass.toString());
             if (true) {
