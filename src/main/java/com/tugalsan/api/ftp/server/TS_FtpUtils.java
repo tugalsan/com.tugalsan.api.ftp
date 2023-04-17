@@ -17,7 +17,7 @@ public class TS_FtpUtils {
     final private static TS_Log d = TS_Log.of(TS_FtpUtils.class);
 
     public static Optional<String> fetchWorkingDirectory(FTPClient ftpClient) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             return Optional.of(ftpClient.printWorkingDirectory());
         }, e -> {
             e.printStackTrace();
@@ -26,7 +26,7 @@ public class TS_FtpUtils {
     }
 
     public static boolean makeDirectory(FTPClient ftpClient, CharSequence newDir_withSlashPrefix) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var success = ftpClient.makeDirectory(newDir_withSlashPrefix.toString());
             return success;
         }, e -> {
@@ -36,7 +36,7 @@ public class TS_FtpUtils {
     }
 
     public static boolean upload(FTPClient ftpClient, Path file) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             return ftpClient.storeFile(TS_FileUtils.getNameFull(file), Files.newInputStream(file));
         }, e -> {
             e.printStackTrace();
@@ -45,7 +45,7 @@ public class TS_FtpUtils {
     }
 
     public static boolean changeWorkingDirectory(FTPClient ftpClient, CharSequence newDir_withSlashPrefix) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var success = ftpClient.changeWorkingDirectory(newDir_withSlashPrefix.toString());
             return success;
         }, e -> {
@@ -55,17 +55,17 @@ public class TS_FtpUtils {
     }
 
     public static void destroy(FTPClient ftpClient) {
-        TGS_UnSafe.execute(() -> ftpClient.logout(), e -> TGS_StreamUtils.doNothing());
-        TGS_UnSafe.execute(() -> ftpClient.disconnect(), e -> TGS_StreamUtils.doNothing());
+        TGS_UnSafe.run(() -> ftpClient.logout(), e -> TGS_StreamUtils.runNothing());
+        TGS_UnSafe.run(() -> ftpClient.disconnect(), e -> TGS_StreamUtils.runNothing());
     }
 
     public static Optional<FTPClient> connect(CharSequence hostName, int port) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var ftpClient = new FTPClient();
             ftpClient.connect(hostName.toString(), port);
             var replyCode = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                TGS_UnSafe.catchMeIfUCan(d.className, "connect", "Operation failed. Server reply code: " + replyCode);
+                TGS_UnSafe.thrw(d.className, "connect", "Operation failed. Server reply code: " + replyCode);
             }
             return Optional.of(ftpClient);
         }, e -> {
@@ -75,7 +75,7 @@ public class TS_FtpUtils {
     }
 
     public static boolean login(FTPClient ftpClient, CharSequence user, CharSequence pass) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var success = ftpClient.login(user.toString(), pass.toString());
             if (true) {
                 ftpClient.enterLocalPassiveMode();
