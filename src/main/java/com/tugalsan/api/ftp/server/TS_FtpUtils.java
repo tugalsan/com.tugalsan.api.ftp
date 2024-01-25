@@ -27,8 +27,7 @@ public class TS_FtpUtils {
 
     public static boolean makeDirectory(FTPClient ftpClient, CharSequence newDir_withSlashPrefix) {
         return TGS_UnSafe.call(() -> {
-            var success = ftpClient.makeDirectory(newDir_withSlashPrefix.toString());
-            return success;
+            return ftpClient.makeDirectory(newDir_withSlashPrefix.toString());
         }, e -> {
             e.printStackTrace();
             return false;
@@ -46,8 +45,7 @@ public class TS_FtpUtils {
 
     public static boolean changeWorkingDirectory(FTPClient ftpClient, CharSequence newDir_withSlashPrefix) {
         return TGS_UnSafe.call(() -> {
-            var success = ftpClient.changeWorkingDirectory(newDir_withSlashPrefix.toString());
-            return success;
+            return ftpClient.changeWorkingDirectory(newDir_withSlashPrefix.toString());
         }, e -> {
             e.printStackTrace();
             return false;
