@@ -4,6 +4,7 @@ import com.tugalsan.api.file.server.TS_FileUtils;
 import com.tugalsan.api.list.client.TGS_ListUtils;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.union.client.TGS_Union;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,31 +24,43 @@ public class TS_FtpUtils {
         }
     }
 
-    public static TGS_Union<Boolean> makeDirectory(FTPClient ftpClient, CharSequence newDir_withSlashPrefix) {
+    public static TGS_UnionExcuse makeDirectory(FTPClient ftpClient, CharSequence newDir_withSlashPrefix) {
         try {
-            return TGS_Union.of(ftpClient.makeDirectory(newDir_withSlashPrefix.toString()));
+            var result = ftpClient.makeDirectory(newDir_withSlashPrefix.toString());
+            if (!result) {
+                return TGS_UnionExcuse.ofExcuse(d.className, "makeDirectory", "result is false");
+            }
+            return TGS_UnionExcuse.ofVoid();
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
-    public static TGS_Union<Boolean> upload(FTPClient ftpClient, Path file) {
+    public static TGS_UnionExcuse upload(FTPClient ftpClient, Path file) {
         try {
-            return TGS_Union.of(ftpClient.storeFile(TS_FileUtils.getNameFull(file), Files.newInputStream(file)));
+            var result = ftpClient.storeFile(TS_FileUtils.getNameFull(file), Files.newInputStream(file));
+            if (!result) {
+                return TGS_UnionExcuse.ofExcuse(d.className, "makeDirectory", "result is false");
+            }
+            return TGS_UnionExcuse.ofVoid();
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
-    public static TGS_Union<Boolean> changeWorkingDirectory(FTPClient ftpClient, CharSequence newDir_withSlashPrefix) {
+    public static TGS_UnionExcuse changeWorkingDirectory(FTPClient ftpClient, CharSequence newDir_withSlashPrefix) {
         try {
-            return TGS_Union.of(ftpClient.changeWorkingDirectory(newDir_withSlashPrefix.toString()));
+            var result = ftpClient.changeWorkingDirectory(newDir_withSlashPrefix.toString());
+            if (!result) {
+                return TGS_UnionExcuse.ofExcuse(d.className, "makeDirectory", "result is false");
+            }
+            return TGS_UnionExcuse.ofVoid();
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
-    public static TGS_Union<Boolean> destroy(FTPClient ftpClient) {
+    public static TGS_UnionExcuse destroy(FTPClient ftpClient) {
         try {
             ftpClient.logout();
         } catch (IOException ex) {
@@ -55,9 +68,9 @@ public class TS_FtpUtils {
         }
         try {
             ftpClient.disconnect();
-            return TGS_Union.of(true);
+            return TGS_UnionExcuse.ofVoid();
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
@@ -75,15 +88,16 @@ public class TS_FtpUtils {
         }
     }
 
-    public static TGS_Union<Boolean> login(FTPClient ftpClient, CharSequence user, CharSequence pass) {
+    public static TGS_UnionExcuse login(FTPClient ftpClient, CharSequence user, CharSequence pass) {
         try {
-            var success = ftpClient.login(user.toString(), pass.toString());
-            if (true) {
-                ftpClient.enterLocalPassiveMode();
+            var result = ftpClient.login(user.toString(), pass.toString());
+            ftpClient.enterLocalPassiveMode();
+            if (!result) {
+                return TGS_UnionExcuse.ofExcuse(d.className, "makeDirectory", "result is false");
             }
-            return TGS_Union.of(success);
+            return TGS_UnionExcuse.ofVoid();
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
