@@ -39,7 +39,10 @@ public class TS_FtpUtils {
 
     public static TGS_UnionExcuseVoid upload(FTPClient ftpClient, Path file) {
         return TGS_UnSafe.call(() -> {
-            var result = ftpClient.storeFile(TS_FileUtils.getNameFull(file), Files.newInputStream(file));
+            var result = false;
+            try (var is = Files.newInputStream(file)) {
+                result = ftpClient.storeFile(TS_FileUtils.getNameFull(file), is);
+            }
             if (!result) {
                 return TGS_UnionExcuseVoid.ofExcuse(d.className, "makeDirectory", "result is false");
             }
