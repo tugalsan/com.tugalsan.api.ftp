@@ -29,7 +29,7 @@ public class TS_FtpUtils {
         return TGS_FuncMTCUtils.call(() -> {
             var result = ftpClient.makeDirectory(newDir_withSlashPrefix.toString());
             if (!result) {
-                return TGS_UnionExcuseVoid.ofExcuse(d.className, "makeDirectory", "result is false");
+                return TGS_UnionExcuseVoid.ofExcuse(d.className(), "makeDirectory", "result is false");
             }
             return TGS_UnionExcuseVoid.ofVoid();
         }, e -> {
@@ -44,7 +44,7 @@ public class TS_FtpUtils {
                 result = ftpClient.storeFile(TS_FileUtils.getNameFull(file), is);
             }
             if (!result) {
-                return TGS_UnionExcuseVoid.ofExcuse(d.className, "makeDirectory", "result is false");
+                return TGS_UnionExcuseVoid.ofExcuse(d.className(), "makeDirectory", "result is false");
             }
             return TGS_UnionExcuseVoid.ofVoid();
         }, e -> {
@@ -56,7 +56,7 @@ public class TS_FtpUtils {
         return TGS_FuncMTCUtils.call(() -> {
             var result = ftpClient.changeWorkingDirectory(newDir_withSlashPrefix.toString());
             if (!result) {
-                return TGS_UnionExcuseVoid.ofExcuse(d.className, "makeDirectory", "result is false");
+                return TGS_UnionExcuseVoid.ofExcuse(d.className(), "makeDirectory", "result is false");
             }
             return TGS_UnionExcuseVoid.ofVoid();
         }, e -> {
@@ -69,7 +69,7 @@ public class TS_FtpUtils {
         TGS_FuncMTCUtils.run(() -> ftpClient.logout(), e -> errors.add(e.toString()));
         TGS_FuncMTCUtils.run(() -> ftpClient.disconnect(), e -> errors.add(e.toString()));
         if (!errors.toString().isEmpty()) {
-            return TGS_UnionExcuseVoid.ofExcuse(d.className, "destroy", errors.toString());
+            return TGS_UnionExcuseVoid.ofExcuse(d.className(), "destroy", errors.toString());
         }
         return TGS_UnionExcuseVoid.ofVoid();
     }
@@ -80,7 +80,7 @@ public class TS_FtpUtils {
             ftpClient.connect(hostName.toString(), port);
             var replyCode = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                TGS_UnionExcuse.ofExcuse(d.className, "connect", "Operation failed. Server reply code: " + replyCode);
+                TGS_UnionExcuse.ofExcuse(d.className(), "connect", "Operation failed. Server reply code: " + replyCode);
             }
             return TGS_UnionExcuse.of(ftpClient);
         }, e -> {
@@ -95,7 +95,7 @@ public class TS_FtpUtils {
                 ftpClient.enterLocalPassiveMode();
             }
             if (!result) {
-                return TGS_UnionExcuseVoid.ofExcuse(d.className, "makeDirectory", "result is false");
+                return TGS_UnionExcuseVoid.ofExcuse(d.className(), "makeDirectory", "result is false");
             }
             return TGS_UnionExcuseVoid.ofVoid();
         }, e -> {
